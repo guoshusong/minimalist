@@ -21,7 +21,7 @@ public class FileDetail {
     /**
      * 文件名称
      */
-    public String fileName;
+    private String fileName;
 
 
     /**

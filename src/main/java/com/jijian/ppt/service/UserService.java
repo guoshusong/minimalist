@@ -1,7 +1,10 @@
 package com.jijian.ppt.service;
 
 import com.jijian.ppt.POJO.DTO.TokenPO;
+import com.jijian.ppt.POJO.FileDetail;
 import com.jijian.ppt.utils.response.UniversalResponseBody;
+
+import java.util.List;
 
 
 /**
@@ -20,6 +23,19 @@ public interface UserService {
      */
     UniversalResponseBody<TokenPO> userWxLogin(String code);
 
+    /**
+     * 获取用户的文件
+     * @param userId
+     * @return
+     */
+    UniversalResponseBody<List<FileDetail>> getUserFiles(Integer userId);
 
 
+    /**
+     * 删除用户文件
+     * @param userId
+     * @param fileId
+     * @return
+     */
+    UniversalResponseBody<List<FileDetail>> deleteUserFile(Integer userId,Integer fileId);
 }

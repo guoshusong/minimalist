@@ -1,8 +1,10 @@
 package com.jijian.ppt.service.Impl;
 
 import com.jijian.ppt.POJO.DTO.TokenPO;
+import com.jijian.ppt.POJO.FileDetail;
 import com.jijian.ppt.POJO.Info.WxResponseInfo;
 import com.jijian.ppt.POJO.User;
+import com.jijian.ppt.mapper.FileDetailMapper;
 import com.jijian.ppt.service.UserService;
 
 import com.jijian.ppt.mapper.TokenMapper;
@@ -15,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.util.List;
 
 /**
  * @author 郭树耸
@@ -33,6 +37,8 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Resource
     private TokenMapper tokenMapper;
+    @Resource
+    private FileDetailMapper fileDetailMapper;
 
 
     /**
@@ -73,4 +79,26 @@ public class UserServiceImpl implements UserService {
         return new UniversalResponseBody<TokenPO>(ResponseResultEnum.USER_LOGIN_SECCESS.getCode(),ResponseResultEnum.USER_LOGIN_SECCESS.getMsg(),tokenPO);
     }
 
+
+    @Override
+    public UniversalResponseBody<List<FileDetail>> getUserFiles(Integer userId) {
+        List<FileDetail> fileDetails = fileDetailMapper.getFilesByUserId(userId);
+        if (fileDetails == null){
+            return new UniversalResponseBody<List<FileDetail>>(ResponseResultEnum.PARAM_IS_INVALID.getCode(),ResponseResultEnum.PARAM_IS_INVALID.getMsg());
+        }
+        return new UniversalResponseBody<List<FileDetail>>(ResponseResultEnum.SUCCESS.getCode(),ResponseResultEnum.SUCCESS.getMsg(),fileDetails);
+    }
+
+    @Override
+    public UniversalResponseBody<List<FileDetail>> deleteUserFile(Integer userId, Integer fileId) {
+        FileDetail fileDetail = fileDetailMapper.getDetailByFileId(fileId);
+        File file = new File(fileDetail.getFilePath());
+        file.deleteOnExit();
+        fileDetailMapper.deleteFileByFileId(fileId);
+        List<FileDetail> fileDetails = fileDetailMapper.getFilesByUserId(userId);
+        if (fileDetails == null){
+            return new UniversalResponseBody<List<FileDetail>>(ResponseResultEnum.PARAM_IS_INVALID.getCode(),ResponseResultEnum.PARAM_IS_INVALID.getMsg());
+        }
+        return new UniversalResponseBody<List<FileDetail>>(ResponseResultEnum.SUCCESS.getCode(),ResponseResultEnum.SUCCESS.getMsg(),fileDetails);
+    }
 }

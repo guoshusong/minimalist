@@ -23,6 +23,10 @@
         SET page_counts = #{pageCounts,jdbcType=INTEGER}
         where file_Id = #{fileId,jdbcType=INTEGER}
     </update>
+    <delete id="deleteFileByFileId">
+        DELETE FROM filedetail
+        where file_Id = #{fileId,jdbcType=INTEGER}
+    </delete>
 
 
     <select id="getPathByFileId" resultType="java.lang.String">
@@ -35,5 +39,11 @@
         SELECT file_id,file_path,user_id,template_id,page_counts,file_name
         FROM filedetail
         where file_Id = #{fileId,jdbcType=INTEGER}
+    </select>
+
+    <select id="getFilesByUserId" resultType="com.jijian.ppt.POJO.FileDetail">
+        SELECT file_id,file_path,user_id,template_id,page_counts,file_name
+        FROM filedetail
+        where user_id = #{userId,jdbcType=INTEGER}
     </select>
 </mapper>
